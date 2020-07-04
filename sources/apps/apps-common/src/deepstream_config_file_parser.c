@@ -169,6 +169,7 @@ GST_DEBUG_CATEGORY (APP_CFG_PARSER_CAT);
 #define CONFIG_GROUP_DSEXAMPLE_FULL_FRAME "full-frame"
 #define CONFIG_GROUP_DSEXAMPLE_PROCESSING_WIDTH "processing-width"
 #define CONFIG_GROUP_DSEXAMPLE_PROCESSING_HEIGHT "processing-height"
+#define CONFIG_GROUP_DSEXAMPLE_BLUR_OBJECTS "blur-objects"
 #define CONFIG_GROUP_DSEXAMPLE_UNIQUE_ID "unique-id"
 #define CONFIG_GROUP_DSEXAMPLE_GPU_ID "gpu-id"
 
@@ -691,6 +692,12 @@ parse_dsexample (NvDsDsExampleConfig *config, GKeyFile *key_file)
         g_key_file_get_integer (key_file, CONFIG_GROUP_DSEXAMPLE,
             CONFIG_GROUP_DSEXAMPLE_PROCESSING_HEIGHT, &error);
       CHECK_ERROR (error);
+    } else if (!g_strcmp0 (*key, CONFIG_GROUP_DSEXAMPLE_BLUR_OBJECTS)) {
+      config->blur_objects =
+        g_key_file_get_integer (key_file, CONFIG_GROUP_DSEXAMPLE,
+            CONFIG_GROUP_DSEXAMPLE_BLUR_OBJECTS, &error);
+      CHECK_ERROR (error);
+      
     } else if (!g_strcmp0 (*key, CONFIG_GROUP_DSEXAMPLE_UNIQUE_ID)) {
       config->unique_id =
         g_key_file_get_integer (key_file, CONFIG_GROUP_DSEXAMPLE,

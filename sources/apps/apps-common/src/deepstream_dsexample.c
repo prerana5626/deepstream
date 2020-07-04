@@ -72,7 +72,8 @@ create_dsexample_bin (NvDsDsExampleConfig *config, NvDsDsExampleBin *bin)
       "processing-width", config->processing_width,
       "processing-height", config->processing_height,
       "unique-id", config->unique_id,
-      "gpu-id", config->gpu_id, NULL);
+      "gpu-id", config->gpu_id,
+       "blur-objects",config->blur_objects,NULL);
 
  g_object_set (G_OBJECT (bin->pre_conv), "gpu-id", config->gpu_id, NULL);
 

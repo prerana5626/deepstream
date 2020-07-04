@@ -20,8 +20,8 @@
 # DEALINGS IN THE SOFTWARE.
 ################################################################################
 
-APP:= deepstream-test5-app
-
+APP:= deepstream-app
+CUDA_VER?=10.2
 TARGET_DEVICE = $(shell gcc -dumpmachine | cut -f1 -d -)
 
 NVDS_VERSION:=5.0
@@ -34,19 +34,19 @@ ifeq ($(TARGET_DEVICE),aarch64)
 endif
 
 SRCS:= deepstream_test5_app_main.c deepstream_utc.c
-SRCS+= ../deepstream-app/deepstream_app.c ../deepstream-app/deepstream_app_config_parser.c
+SRCS+= deepstream_app.c deepstream_app_config_parser.c
 SRCS+= $(wildcard ../../apps-common/src/*.c)
 
 INCS:= $(wildcard *.h)
 
-PKGS:= gstreamer-1.0 gstreamer-video-1.0 x11
+PKGS:= gstreamer-1.0 gstreamer-video-1.0 x11 
 
 OBJS:= $(SRCS:.c=.o)
 
-CFLAGS+= -I../../apps-common/includes -I../../../includes -I../deepstream-app/ -DDS_VERSION_MINOR=0 -DDS_VERSION_MAJOR=5
+CFLAGS+= -I../../apps-common/includes -I /usr/local/cuda-$(CUDA_VER)/include -I../../../includes  -DDS_VERSION_MINOR=0 -DDS_VERSION_MAJOR=5
 
 LIBS+= -L$(LIB_INSTALL_DIR) -lnvdsgst_meta -lnvds_meta -lnvdsgst_helper -lnvdsgst_smartrecord -lnvds_utils -lm \
-       -lgstrtspserver-1.0 -ldl -Wl,-rpath,$(LIB_INSTALL_DIR)
+      -lnvbufsurface -lnvbufsurftransform -lgstrtspserver-1.0  -lnvds_batch_jpegenc  -ldl -Wl,-rpath,$(LIB_INSTALL_DIR)
 
 CFLAGS+= `pkg-config --cflags $(PKGS)`
 

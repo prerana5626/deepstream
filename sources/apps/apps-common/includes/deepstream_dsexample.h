@@ -36,6 +36,7 @@ typedef struct
   gboolean enable;
   // Struct members to store config / properties for the element
   gboolean full_frame;
+  gboolean blur_objects;
   gint processing_width;
   gint processing_height;
   guint unique_id;

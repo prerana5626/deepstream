@@ -945,7 +945,8 @@ create_pipeline (AppCtx * appCtx,
   guint i;
   GstPad *fps_pad;
   gulong latency_probe_id;
-
+  GstElement *caps_filter = NULL;
+  
   _dsmeta_quark = g_quark_from_static_string (NVDS_META_STRING);
 
   appCtx->all_bbox_generated_cb = all_bbox_generated_cb;
@@ -1190,6 +1191,19 @@ create_pipeline (AppCtx * appCtx,
   // Decide where in the pipeline the element should be added and add only if
   // enabled
   if (config->dsexample_config.enable) {
+    for (i = 0; i <  config->num_source_sub_bins; i++) {    
+              /* Set properties of the caps_filter element */
+            caps_filter = gst_element_factory_make ("capsfilter", NULL);
+        GstCaps *caps = gst_caps_new_simple ("video/x-raw", "format", G_TYPE_STRING, "RGBA",NULL);
+        GstCapsFeatures *feature = gst_caps_features_new (MEMORY_FEATURES, NULL);
+        gst_caps_set_features (caps, 0, feature);
+
+        g_object_set (G_OBJECT (caps_filter), "caps", caps, NULL);
+        gst_bin_add (GST_BIN (pipeline->pipeline), caps_filter);
+          NVGSTDS_LINK_ELEMENT (caps_filter, last_elem);
+          last_elem = caps_filter;
+  gst_caps_unref (caps);
+    }
     // Create dsexample element bin and set properties
     if (!create_dsexample_bin (&config->dsexample_config,
             &pipeline->dsexample_bin)) {
